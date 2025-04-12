@@ -3,77 +3,101 @@ import 'package:args/args.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 
-final Logger logger = Logger(
-  printer: PrettyPrinter(),
-);
+final Logger logger = Logger(printer: PrettyPrinter());
 
 // Add a new command for scanning components
 void main(List<String> arguments) {
-  final parser = ArgParser()
-    ..addCommand(
-        'runner',
-        ArgParser()
-          ..addOption(
-            'pages-dir',
-            abbr: 'p',
-            help: 'Directory containing page components',
-            defaultsTo: 'lib/pages',
-          )
-          ..addFlag(
-            'verbose',
-            abbr: 'v',
-            help: 'Enable verbose logging',
-            defaultsTo: false,
-          ))
-    ..addCommand(
-        'components',
-        ArgParser()
-          ..addOption(
-            'components-dir',
-            abbr: 'c',
-            help: 'Directory containing components',
-            defaultsTo: 'lib/components',
-          )
-          ..addFlag(
-            'verbose',
-            abbr: 'v',
-            help: 'Enable verbose logging',
-            defaultsTo: false,
-          ))
-    ..addCommand(
-        'page',
-        ArgParser()
-          ..addOption(
-            'name',
-            abbr: 'n',
-            help: 'Name of the page to generate',
-            mandatory: true,
-          )
-          ..addOption(
-            'type',
-            abbr: 't',
-            help: 'Type of widget (stateless or stateful)',
-            allowed: ['stateless', 'stateful'],
-            defaultsTo: 'stateless',
-          )
-          ..addOption(
-            'route',
-            abbr: 'r',
-            help: 'Route path for the page',
-          )
-          ..addOption(
-            'dir',
-            abbr: 'd',
-            help: 'Directory to create the page in',
-            defaultsTo: 'lib/pages',
-          )
-          ..addOption(
-            'file',
-            abbr: 'f',
-            help: 'Custom file name (e.g., index.dart)',
-          ))
-    ..addFlag('help',
-        abbr: 'h', negatable: false, help: 'Displays this help information.');
+  final parser =
+      ArgParser()
+        ..addCommand(
+          'runner',
+          ArgParser()
+            ..addOption(
+              'pages-dir',
+              abbr: 'p',
+              help: 'Directory containing page components',
+              defaultsTo: 'lib/pages',
+            )
+            ..addFlag(
+              'verbose',
+              abbr: 'v',
+              help: 'Enable verbose logging',
+              defaultsTo: false,
+            ),
+        )
+        ..addCommand(
+          'components',
+          ArgParser()
+            ..addOption(
+              'components-dir',
+              abbr: 'c',
+              help: 'Directory containing components',
+              defaultsTo: 'lib/components',
+            )
+            ..addFlag(
+              'verbose',
+              abbr: 'v',
+              help: 'Enable verbose logging',
+              defaultsTo: false,
+            ),
+        )
+        ..addCommand(
+          'page',
+          ArgParser()
+            ..addOption(
+              'name',
+              abbr: 'n',
+              help: 'Name of the page to generate',
+              mandatory: true,
+            )
+            ..addOption(
+              'type',
+              abbr: 't',
+              help: 'Type of widget (stateless or stateful)',
+              allowed: ['stateless', 'stateful'],
+              defaultsTo: 'stateless',
+            )
+            ..addOption('route', abbr: 'r', help: 'Route path for the page')
+            ..addOption(
+              'dir',
+              abbr: 'd',
+              help: 'Directory to create the page in',
+              defaultsTo: 'lib/pages',
+            )
+            ..addOption(
+              'file',
+              abbr: 'f',
+              help: 'Custom file name (e.g., index.dart)',
+            ),
+        )
+        ..addCommand(
+          'create',
+          ArgParser()
+            ..addOption(
+              'name',
+              abbr: 'n',
+              help: 'Name of the app to create',
+              defaultsTo: 'vortex_app',
+            )
+            ..addOption(
+              'org',
+              abbr: 'o',
+              help: 'Organization name (e.g., com.example)',
+              defaultsTo: 'com.example',
+            )
+            ..addFlag(
+              'verbose',
+              abbr: 'v',
+              help: 'Enable verbose logging',
+              defaultsTo: false,
+            ),
+        )
+        ..addFlag(
+          'help',
+          abbr: 'h',
+          negatable: false,
+          help: 'Displays this help information.',
+        );
 
   final argResults = parser.parse(arguments);
 
@@ -88,6 +112,8 @@ void main(List<String> arguments) {
     _runComponentScanner(argResults.command!);
   } else if (argResults.command?.name == 'page') {
     _generatePage(argResults.command!);
+  } else if (argResults.command?.name == 'create') {
+    _createApp(argResults.command!);
   } else {
     logger.i('Invalid command.');
     _printUsage(parser);
@@ -135,10 +161,12 @@ void _runRouterScanner(ArgResults args) {
 List<File> _findPageFiles(String directory) {
   return Directory(directory)
       .listSync(recursive: true)
-      .where((entity) =>
-          entity is File &&
-          entity.path.endsWith('.dart') &&
-          _containsPageAnnotation(entity as File))
+      .where(
+        (entity) =>
+            entity is File &&
+            entity.path.endsWith('.dart') &&
+            _containsPageAnnotation(entity as File),
+      )
       .cast<File>()
       .toList();
 }
@@ -182,8 +210,9 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
     // Import all page files
     for (final file in pageFiles) {
       final relativePath = path.relative(file.path, from: projectDir);
-      final importPath =
-          relativePath.replaceAll('\\', '/').replaceFirst(RegExp(r'^lib/'), '');
+      final importPath = relativePath
+          .replaceAll('\\', '/')
+          .replaceFirst(RegExp(r'^lib/'), '');
 
       final importStatement =
           'import \'package:${_getPackageName(projectDir)}/$importPath\';';
@@ -202,8 +231,8 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
     for (final file in pageFiles) {
       final content = file.readAsStringSync();
       final annotationMatch = RegExp(
-              r'''@FlutterWindPage\(\s*(['"])(.*?)\1\s*(?:,\s*middleware\s*:\s*\[(.*?)\])?\s*\)''')
-          .firstMatch(content);
+        r'''@FlutterWindPage\(\s*(['"])(.*?)\1\s*(?:,\s*middleware\s*:\s*\[(.*?)\])?\s*\)''',
+      ).firstMatch(content);
 
       if (annotationMatch != null) {
         var routePath = annotationMatch.group(2)!;
@@ -217,16 +246,19 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
         // Parse middleware list if present
         List<String> middleware = [];
         if (middlewareStr != null && middlewareStr.isNotEmpty) {
-          middleware = middlewareStr!
-              .split(',')
-              .map((m) => m.trim().replaceAll(RegExp(r'''^['"]|['"]$'''), ''))
-              .where((m) => m.isNotEmpty)
-              .toList();
+          middleware =
+              middlewareStr!
+                  .split(',')
+                  .map(
+                    (m) => m.trim().replaceAll(RegExp(r'''^['"]|['"]$'''), ''),
+                  )
+                  .where((m) => m.isNotEmpty)
+                  .toList();
         }
 
         final classMatch = RegExp(
-                r'class\s+(\w+)\s+extends\s+(StatelessWidget|StatefulWidget)')
-            .firstMatch(content);
+          r'class\s+(\w+)\s+extends\s+(StatelessWidget|StatefulWidget)',
+        ).firstMatch(content);
 
         if (classMatch != null) {
           final className = classMatch.group(1)!;
@@ -236,12 +268,14 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
             buffer.writeln('    \'$routePath\',');
             buffer.writeln('    (context, args) => const $className(),');
             buffer.writeln(
-                '    middleware: [${middleware.map((m) => '\'$m\'').join(', ')}],');
+              '    middleware: [${middleware.map((m) => '\'$m\'').join(', ')}],',
+            );
             buffer.writeln('  );');
           } else {
             buffer.writeln('  // Register route for $className');
             buffer.writeln(
-                '  FlutterWindPageRegistry.registerPage(\'$routePath\', (context, args) => const $className());');
+              '  FlutterWindPageRegistry.registerPage(\'$routePath\', (context, args) => const $className());',
+            );
           }
         }
       }
@@ -255,14 +289,18 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
     logger.i("Generated route registration code: ${outputFile.path}");
     logger.i("Add the following to your main.dart file:");
     logger.i(
-        "import 'package:${_getPackageName(projectDir)}/generated/routes.dart';");
+      "import 'package:${_getPackageName(projectDir)}/generated/routes.dart';",
+    );
     logger.i("void main() {");
     logger.i("  initializeFlutterWindRoutes();");
     logger.i("  runApp(const MyApp());");
     logger.i("}");
   } catch (e, stackTrace) {
-    logger.e("Error generating route registration code",
-        error: e, stackTrace: stackTrace);
+    logger.e(
+      "Error generating route registration code",
+      error: e,
+      stackTrace: stackTrace,
+    );
   }
 }
 
@@ -308,11 +346,12 @@ void _generatePage(ArgResults args) {
 
     // Determine the file path
     // Determine the file path
-    final fileName = customFileName != null
-        ? customFileName.endsWith('.dart')
-            ? customFileName
-            : '$customFileName.dart'
-        : '${_getFileNameFromPageName(pageName)}.dart';
+    final fileName =
+        customFileName != null
+            ? customFileName.endsWith('.dart')
+                ? customFileName
+                : '$customFileName.dart'
+            : '${_getFileNameFromPageName(pageName)}.dart';
     final filePath = path.join(fullPageDir, fileName);
 
     // Check if the file already exists
@@ -332,9 +371,10 @@ void _generatePage(ArgResults args) {
 
     // Automatically run the router scanner
     logger.i("Running router scanner to update routes...");
-    final runnerArgs = ArgParser()
-      ..addOption('pages-dir', defaultsTo: 'lib/pages')
-      ..addFlag('verbose', defaultsTo: false);
+    final runnerArgs =
+        ArgParser()
+          ..addOption('pages-dir', defaultsTo: 'lib/pages')
+          ..addFlag('verbose', defaultsTo: false);
 
     final parsedRunnerArgs = runnerArgs.parse([]);
     _runRouterScanner(parsedRunnerArgs);
@@ -345,7 +385,10 @@ void _generatePage(ArgResults args) {
 
 /// Generate the content for a new page
 String _generatePageContent(
-    String pageName, String pageType, String routePath) {
+  String pageName,
+  String pageType,
+  String routePath,
+) {
   final className = _getClassNameFromPageName(pageName);
 
   if (pageType == 'stateless') {
@@ -391,10 +434,13 @@ class _${className}State extends State<$className> {
 /// Convert a page name to a file name
 String _getFileNameFromPageName(String pageName) {
   // Convert PascalCase or camelCase to snake_case
-  final fileName = pageName
-      .replaceAllMapped(
-          RegExp(r'[A-Z]'), (match) => '_${match.group(0)!.toLowerCase()}')
-      .toLowerCase();
+  final fileName =
+      pageName
+          .replaceAllMapped(
+            RegExp(r'[A-Z]'),
+            (match) => '_${match.group(0)!.toLowerCase()}',
+          )
+          .toLowerCase();
 
   // Remove leading underscore if present
   return fileName.startsWith('_') ? fileName.substring(1) : fileName;
@@ -424,7 +470,273 @@ void _printUsage(ArgParser parser) {
   logger.i('    --route, -r            Route path for the page');
   logger.i('    --dir, -d              Directory to create the page in');
   logger.i('    --file, -f             Custom file name (e.g., index.dart)');
+  logger.i('  components Scan and register components');
+  logger.i('  create     Create a new Vortex app with proper structure');
+  logger.i('    --name, -n             Name of the app to create');
+  logger.i('    --org, -o              Organization name (e.g., com.example)');
   logger.i(parser.usage);
+}
+
+void _createApp(ArgResults args) {
+  final appName = args['name'] as String;
+  final orgName = args['org'] as String;
+  final verbose = args['verbose'] as bool;
+
+  logger.i("Creating new Vortex app: $appName");
+  logger.i("Organization: $orgName");
+
+  try {
+    final result = Process.runSync('flutter', [
+      'create',
+      '--org=$orgName',
+      '--project-name=$appName',
+      appName,
+    ]);
+
+    if (result.exitCode != 0) {
+      logger.e("Error creating Flutter app: ${result.stderr}");
+      return;
+    }
+
+    logger.i("Flutter app created successfully");
+
+    // Change to the app directory
+    final appDir = Directory(path.join(Directory.current.path, appName));
+
+    if (verbose) {
+      logger.d("Changing to directory: ${appDir.path}");
+    }
+
+    // Create Nuxt-like folder structure
+    _createNuxtLikeFolderStructure(appDir.path, verbose);
+
+    // Update pubspec.yaml to add flutterwind_core dependency
+    _updatePubspecYaml(appDir.path);
+
+    // Create main.dart with Vortex initialization
+    _createMainDart(appDir.path);
+
+    // Create example pages
+    _createExamplePages(appDir.path);
+
+    // Run flutter pub get
+    final pubGetResult = Process.runSync('flutter', [
+      'pub',
+      'get',
+    ], workingDirectory: appDir.path);
+
+    if (pubGetResult.exitCode != 0) {
+      logger.e("Error running flutter pub get: ${pubGetResult.stderr}");
+    } else {
+      logger.i("Dependencies installed successfully");
+    }
+
+    // Run the router scanner
+    final runnerResult = Process.runSync('flutter', [
+      'pub',
+      'run',
+      'vortex',
+      'runner',
+    ], workingDirectory: appDir.path);
+
+    if (runnerResult.exitCode != 0) {
+      logger.e("Error running router scanner: ${runnerResult.stderr}");
+    } else {
+      logger.i("Router scanner completed successfully");
+    }
+
+    // Run the component scanner
+    final componentResult = Process.runSync('flutter', [
+      'pub',
+      'run',
+      'vortex',
+      'components',
+    ], workingDirectory: appDir.path);
+
+    if (componentResult.exitCode != 0) {
+      logger.e("Error running component scanner: ${componentResult.stderr}");
+    } else {
+      logger.i("Component scanner completed successfully");
+    }
+
+    logger.i("Vortex app created successfully at: ${appDir.path}");
+    logger.i("To run your app:");
+    logger.i("  cd $appName");
+    logger.i("  flutter run vortex");
+  } catch (e, stackTrace) {
+    logger.e("Error creating Vortex app", error: e, stackTrace: stackTrace);
+  }
+}
+
+/// Create Nuxt-like folder structure
+void _createNuxtLikeFolderStructure(String appDir, bool verbose) {
+  final directories = [
+    'lib/pages',
+    'lib/components',
+    'lib/layouts',
+    'lib/middleware',
+    'lib/plugins',
+    'lib/store',
+    'lib/assets',
+  ];
+
+  for (final dir in directories) {
+    final directory = Directory(path.join(appDir, dir));
+    directory.createSync(recursive: true);
+
+    if (verbose) {
+      logger.d("Created directory: $dir");
+    }
+  }
+
+  logger.i("Created folder structure");
+}
+
+/// Update pubspec.yaml to add flutterwind_core dependency
+void _updatePubspecYaml(String appDir) {
+  final pubspecFile = File(path.join(appDir, 'pubspec.yaml'));
+  var content = pubspecFile.readAsStringSync();
+
+  // Add flutterwind_core dependency
+  final dependenciesMatch = RegExp(
+    r'dependencies:[\s\S]*?dev_dependencies:',
+  ).firstMatch(content);
+
+  if (dependenciesMatch != null) {
+    final dependenciesSection = dependenciesMatch.group(0)!;
+    final updatedDependenciesSection = dependenciesSection.replaceFirst(
+      'dependencies:',
+      'dependencies:\n  flutterwind_core: 0.0.2\n  vortex: ^0.0.1',
+    );
+
+    content = content.replaceFirst(
+      dependenciesSection,
+      updatedDependenciesSection,
+    );
+    pubspecFile.writeAsStringSync(content);
+
+    logger.i("Added flutterwind_core: 0.0.2 to pubspec.yaml");
+  } else {
+    logger.e("Could not find dependencies section in pubspec.yaml");
+  }
+}
+
+/// Create main.dart with Vortex initialization
+void _createMainDart(String appDir) {
+  final mainFile = File(path.join(appDir, 'lib', 'main.dart'));
+
+  final content = '''
+import 'package:flutter/material.dart';
+import 'package:vortex/vortex.dart';
+import 'package:${path.basename(appDir)}/generated/routes.dart';
+import 'package:${path.basename(appDir)}/generated/components.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Vortex
+  await Vortex.initialize();
+  
+  // Initialize routes and components
+  initializeFlutterWindRoutes();
+  initializeFlutterWindComponents();
+  
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Vortex(
+      child: FlutterWind(
+        child: MaterialApp(
+          title: '${path.basename(appDir)}',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            brightness: Brightness.dark,
+          ),
+          themeMode: ThemeMode.light,
+          initialRoute: '/',
+          onGenerateInitialRoutes:
+              (initialRoute) => [
+                VortexRouter.initialRouteHandler(
+                  RouteSettings(name: initialRoute),
+                ),
+              ],
+          onGenerateRoute: VortexRouter.onGenerateRoute,
+        ),
+      ),
+    );
+  }
+}
+''';
+
+  mainFile.writeAsStringSync(content);
+  logger.i("Created main.dart with Vortex initialization");
+}
+
+/// Create example pages
+void _createExamplePages(String appDir) {
+  final homePageFile = File(path.join(appDir, 'lib', 'pages', 'index.dart'));
+
+  final homePageContent = '''
+import 'package:flutter/material.dart';
+import 'package:flutterwind_core/flutterwind.dart';
+
+/// Home page
+@FlutterWindPage('/')
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Welcome to Vortex!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/about');
+              },
+              child: const Text('Go to About'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/counter');
+              },
+              child: const Text('Go to Counter'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+''';
+  homePageFile.writeAsStringSync(homePageContent);
+
+  logger.i("Created example pages");
 }
 
 /// Run the component scanner to find and register components
@@ -451,8 +763,9 @@ void _runComponentScanner(ArgResults args) {
 
     if (verbose) {
       for (final file in componentFiles) {
-        logger
-            .d("Component file: ${path.relative(file.path, from: projectDir)}");
+        logger.d(
+          "Component file: ${path.relative(file.path, from: projectDir)}",
+        );
       }
     }
 
@@ -461,8 +774,11 @@ void _runComponentScanner(ArgResults args) {
 
     logger.i("FlutterWind component scanner completed successfully");
   } catch (e, stackTrace) {
-    logger.e("Error running component scanner",
-        error: e, stackTrace: stackTrace);
+    logger.e(
+      "Error running component scanner",
+      error: e,
+      stackTrace: stackTrace,
+    );
   }
 }
 
@@ -470,10 +786,12 @@ void _runComponentScanner(ArgResults args) {
 List<File> _findComponentFiles(String directory) {
   return Directory(directory)
       .listSync(recursive: true)
-      .where((entity) =>
-          entity is File &&
-          entity.path.endsWith('.dart') &&
-          _containsComponentAnnotation(entity as File))
+      .where(
+        (entity) =>
+            entity is File &&
+            entity.path.endsWith('.dart') &&
+            _containsComponentAnnotation(entity as File),
+      )
       .cast<File>()
       .toList();
 }
@@ -491,7 +809,9 @@ bool _containsComponentAnnotation(File file) {
 
 /// Generate component registration code
 void _generateComponentRegistration(
-    String projectDir, List<File> componentFiles) {
+  String projectDir,
+  List<File> componentFiles,
+) {
   try {
     final outputDir = path.join(projectDir, 'lib', 'generated');
     final outputFile = File(path.join(outputDir, 'components.dart'));
@@ -519,8 +839,9 @@ void _generateComponentRegistration(
     // Import all component files
     for (final file in componentFiles) {
       final relativePath = path.relative(file.path, from: projectDir);
-      final importPath =
-          relativePath.replaceAll('\\', '/').replaceFirst(RegExp(r'^lib/'), '');
+      final importPath = relativePath
+          .replaceAll('\\', '/')
+          .replaceFirst(RegExp(r'^lib/'), '');
 
       final importStatement =
           'import \'package:${_getPackageName(projectDir)}/$importPath\';';
@@ -544,21 +865,25 @@ void _generateComponentRegistration(
       final content = file.readAsStringSync();
 
       // Extract class name
-      final classMatch = RegExp(r'class\s+(\w+)\s+extends\s+StatelessWidget')
-          .firstMatch(content);
+      final classMatch = RegExp(
+        r'class\s+(\w+)\s+extends\s+StatelessWidget',
+      ).firstMatch(content);
 
       if (classMatch != null) {
         final className = classMatch.group(1)!;
         buffer.writeln('  // Register component $className');
-        buffer
-            .writeln('  ComponentRegistry.register(\'$className\', (props) {');
+        buffer.writeln(
+          '  ComponentRegistry.register(\'$className\', (props) {',
+        );
         buffer.writeln('    // Convert props to the appropriate parameters');
         buffer.writeln('    return $className(');
         buffer.writeln('      key: props[\'key\'] as Key?,');
 
         // Extract constructor parameters by analyzing class fields
-        final fieldRegex =
-            RegExp(r'final\s+(\w+(?:<[^>]+>)?)\s+(\w+);', multiLine: true);
+        final fieldRegex = RegExp(
+          r'final\s+(\w+(?:<[^>]+>)?)\s+(\w+);',
+          multiLine: true,
+        );
         final fieldMatches = fieldRegex.allMatches(content);
 
         for (final match in fieldMatches) {
@@ -572,10 +897,12 @@ void _generateComponentRegistration(
 
             if (isRequired) {
               buffer.writeln(
-                  '      $fieldName: props[\'$fieldName\'] as $fieldType,');
+                '      $fieldName: props[\'$fieldName\'] as $fieldType,',
+              );
             } else {
               buffer.writeln(
-                  '      $fieldName: props[\'$fieldName\'] as $fieldType?,');
+                '      $fieldName: props[\'$fieldName\'] as $fieldType?,',
+              );
             }
           }
         }
@@ -593,13 +920,17 @@ void _generateComponentRegistration(
     logger.i("Generated component registration code: ${outputFile.path}");
     logger.i("Add the following to your main.dart file:");
     logger.i(
-        "import 'package:${_getPackageName(projectDir)}/generated/components.dart';");
+      "import 'package:${_getPackageName(projectDir)}/generated/components.dart';",
+    );
     logger.i("void main() {");
     logger.i("  initializeFlutterWindComponents();");
     logger.i("  runApp(const MyApp());");
     logger.i("}");
   } catch (e, stackTrace) {
-    logger.e("Error generating component registration code",
-        error: e, stackTrace: stackTrace);
+    logger.e(
+      "Error generating component registration code",
+      error: e,
+      stackTrace: stackTrace,
+    );
   }
 }

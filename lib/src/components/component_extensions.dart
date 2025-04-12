@@ -8,7 +8,7 @@ extension ComponentExtensions on BuildContext {
     final provider = VortexComponentProvider.of(this);
     
     if (provider == null) {
-      throw Exception('component() must be used within a FlutterWindComponentProvider');
+      throw Exception('component() must be used within a VortexComponentProvider');
     }
     
     final builder = provider.components[name];
