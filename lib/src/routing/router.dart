@@ -213,7 +213,7 @@ class VortexRouter {
       final routeArgs = routeSettings?.arguments;
 
       // Try to determine the import path for this file
-      final importPath = _filePathToImportPath(filePath);
+      _filePathToImportPath(filePath);
 
       // First try to use a registered factory function
       if (_pageFactories.containsKey(routePath)) {

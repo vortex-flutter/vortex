@@ -8,6 +8,7 @@ class Log {
       lineLength: 120, // Width of the output
       colors: true, // Colorful log messages
       printEmojis: true, // Print emojis for log levels
+      // ignore: deprecated_member_use
       printTime: false, // Display time of log
     ),
   );

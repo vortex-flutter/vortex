@@ -17,6 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
   logger: ^2.5.0
+  meta: ^1.16.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

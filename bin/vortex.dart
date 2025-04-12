@@ -165,7 +165,7 @@ List<File> _findPageFiles(String directory) {
         (entity) =>
             entity is File &&
             entity.path.endsWith('.dart') &&
-            _containsPageAnnotation(entity as File),
+            _containsPageAnnotation(entity),
       )
       .cast<File>()
       .toList();
@@ -247,7 +247,7 @@ void _generateRouteRegistration(String projectDir, List<File> pageFiles) {
         List<String> middleware = [];
         if (middlewareStr != null && middlewareStr.isNotEmpty) {
           middleware =
-              middlewareStr!
+              middlewareStr
                   .split(',')
                   .map(
                     (m) => m.trim().replaceAll(RegExp(r'''^['"]|['"]$'''), ''),
@@ -790,7 +790,7 @@ List<File> _findComponentFiles(String directory) {
         (entity) =>
             entity is File &&
             entity.path.endsWith('.dart') &&
-            _containsComponentAnnotation(entity as File),
+            _containsComponentAnnotation(entity),
       )
       .cast<File>()
       .toList();
