@@ -1,18 +1,6 @@
 # Vortex
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/yourusername/vortex/main/assets/vortex_logo.png" alt="Vortex Logo" width="200"/>
-</p>
-
-<p align="center">
-  <a href="https://pub.dev/packages/vortex"><img src="https://img.shields.io/pub/v/vortex.svg" alt="Pub"></a>
-  <a href="https://github.com/yourusername/vortex/actions"><img src="https://github.com/yourusername/vortex/workflows/tests/badge.svg" alt="Build Status"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
-</p>
-
-# Vortex
-
-<p align="center">
   <img src="https://raw.githubusercontent.com/vortex-flutter/vortex/main/assets/vortex_logo.png" alt="Vortex Logo" width="200"/>
 </p>
 
@@ -299,4 +287,4 @@ MIT License.
 
 ---
 
-Made with ❤️ by the Vortex team.
+Made with ❤️ by the Vortex team and CodeSyncr.

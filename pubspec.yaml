@@ -1,7 +1,12 @@
 name: vortex
-description: "A new Flutter package project."
+description: "Vortex is a first powerful Flutter framework that brings the convenience and structure of Nuxt.js to Flutter development."
 version: 0.0.1
-homepage:
+repository: https://github.com/vortex-flutter/vortex/tree/main
+issue_tracker: https://github.com/vortex-flutter/vortex/issues
+homepage: https://vortex.brighthustle.in
+documentation: https://flutterwind.dev/getting-started
+topics: [vortex, nuxt, flutter, build-system]
+funding: [https://github.com/sponsors/vortex-flutter]
 
 environment:
   sdk: ^3.7.2
