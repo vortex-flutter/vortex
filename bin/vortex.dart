@@ -606,7 +606,7 @@ void _updatePubspecYaml(String appDir) {
     final dependenciesSection = dependenciesMatch.group(0)!;
     final updatedDependenciesSection = dependenciesSection.replaceFirst(
       'dependencies:',
-      'dependencies:\n  flutterwind_core: 0.0.2\n  vortex: ^0.0.1',
+      'dependencies:\n  flutterwind_core: 0.0.3\n  vortex: ^0.0.1',
     );
 
     content = content.replaceFirst(
@@ -615,7 +615,7 @@ void _updatePubspecYaml(String appDir) {
     );
     pubspecFile.writeAsStringSync(content);
 
-    logger.i("Added flutterwind_core: 0.0.2 to pubspec.yaml");
+    logger.i("Added flutterwind_core: 0.0.3 to pubspec.yaml");
   } else {
     logger.e("Could not find dependencies section in pubspec.yaml");
   }

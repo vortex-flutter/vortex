@@ -1,3 +1,7 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial version.
+* Added basic folder structure creation.
+* Added dependency management for `flutterwind_core` and `vortex`.
+* Implemented router, pages, and components generation.
+* Added basic logging for each step of the process
