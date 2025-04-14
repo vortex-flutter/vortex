@@ -7,9 +7,7 @@ import 'package:vortex/vortex.dart';
 
 void main() async {
   await VortexRouter.discoverRoutes(
-    projectDirectory: Directory(
-      '/Users/yashkumar/Documents/Projects/vortex/example',
-    ),
+    projectDirectory: Directory(Directory.current.path),
   );
 
   MiddlewareRegistry.register('auth', AuthMiddleware());
