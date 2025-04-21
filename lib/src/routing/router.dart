@@ -38,6 +38,7 @@ class VortexRouter {
   /// Automatically discover and register routes based on file structure
   static Future<void> discoverRoutes(
       {required Directory projectDirectory}) async {
+        print('VortexRouter: Discovering routes for project directory: $projectDirectory');
     _projectDirectory = projectDirectory;
     if (_routesDiscovered) return;
 

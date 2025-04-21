@@ -4,12 +4,14 @@ import 'package:example/middleware/auth_middleware.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwind_core/flutterwind.dart';
 import 'package:vortex/vortex.dart';
+import 'package:example/generated/routes.dart';
 
 void main() async {
   await VortexRouter.discoverRoutes(
-    projectDirectory: Directory(Directory.current.path),
+    projectDirectory: Directory('/Volumes/EVILRATT/Innovative Projects/vortex/example'),
   );
 
+  initializeRoutes();
   MiddlewareRegistry.register('auth', AuthMiddleware());
   runApp(const MyApp());
 }

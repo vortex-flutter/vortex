@@ -1,0 +1,13 @@
+screens:
+  sm: "640px"
+  md: "768px"
+  lg: "1024px"
+  xl: "1280px"
+  2xl: "1536px"
+colors:
+  primary: "#3490dc"
+  secondary: "#ffed4a"
+  danger: "#e3342f"
+  success: "#38c172"
+  warning: "#ffed4a"
+  info: "#6cb2eb"
