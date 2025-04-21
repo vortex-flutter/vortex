@@ -23,6 +23,21 @@ class Vortex extends StatefulWidget {
     }
   }
 
+  /// Register a custom composable
+  static void registerComposable(String name, dynamic composable) {
+    try {
+      ComposableRegistry.register(name, composable);
+      Log.i('Registered composable: $name');
+    } catch (e) {
+      Log.e('Error registering composable: $e');
+    }
+  }
+
+  /// Get a registered composable
+  static dynamic getComposable(String name) {
+    return ComposableRegistry.get(name);
+  }
+
   /// Notify plugins that the app has started
   static Future<void> notifyAppStart(BuildContext context) async {
     try {

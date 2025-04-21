@@ -11,3 +11,9 @@
 * Added dependency management for `flutterwind_core` and `vortex`.
 * Implemented router, pages, and components generation.
 * Added basic logging for each step of the process
+
+## 0.0.3
+* Added composable components.
+* Added useFetch composable.
+* Improved error handling and logging.
+* Improved Reactive Store.

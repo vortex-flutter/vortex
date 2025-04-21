@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/scheduler.dart';
+
 /// A builder widget that rebuilds when reactive variables change
 class ReactiveBuilder extends StatefulWidget {
   final Widget Function(BuildContext context) builder;
@@ -15,6 +17,8 @@ class ReactiveBuilder extends StatefulWidget {
 }
 
 class _ReactiveBuilderState extends State<ReactiveBuilder> {
+  bool _needsBuild = false;
+
   @override
   void initState() {
     super.initState();
@@ -26,14 +30,14 @@ class _ReactiveBuilderState extends State<ReactiveBuilder> {
   @override
   void didUpdateWidget(ReactiveBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Remove old listeners
     for (final dep in oldWidget.dependencies) {
       if (!widget.dependencies.contains(dep)) {
         dep.removeListener(_handleChange);
       }
     }
-    
+
     // Add new listeners
     for (final dep in widget.dependencies) {
       if (!oldWidget.dependencies.contains(dep)) {
@@ -52,7 +56,22 @@ class _ReactiveBuilderState extends State<ReactiveBuilder> {
 
   void _handleChange() {
     if (mounted) {
-      setState(() {});
+      // Instead of calling setState directly, schedule it for the next frame
+      // to avoid calling setState during build
+      if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.idle) {
+        setState(() {
+          _needsBuild = false;
+        });
+      } else {
+        _needsBuild = true;
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _needsBuild) {
+            setState(() {
+              _needsBuild = false;
+            });
+          }
+        });
+      }
     }
   }
 
