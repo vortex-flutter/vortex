@@ -28,3 +28,20 @@
 * Added HTTP client with Dio integration
 * Added logger plugin for better debugging
 
+## 0.0.4
+* Added dynamic route parameter handling
+* Improved middleware authentication flow
+* Enhanced theme management with reactive state
+* Added lifecycle hooks support (onMounted)
+* Added watch functionality for reactive state changes
+* Improved error handling in route generation
+* Added support for nested route handling
+* Enhanced logging system with different log levels
+* Added support for configuration through YAML files
+* Improved type safety across the framework
+* Added support for Material 3 theming
+* Enhanced FlutterWind integration
+* Added development tools and debugging features
+* Improved documentation and code examples
+
+

@@ -65,28 +65,24 @@ class _MyAppState extends State<MyApp> with CompositionMixin {
     });
 
     return Vortex(
-      child: FlutterWind(
-        child: ReactiveBuilder(
-          dependencies: [themeState.theme, themeState.isDarkMode],
-          builder: (context) {
-            return MaterialApp(
-              title: 'Vortex Demo',
-              theme: themeState.theme.value,
-              themeMode:
-                  themeState.isDarkMode.value
-                      ? ThemeMode.dark
-                      : ThemeMode.light,
-              initialRoute: '/',
-              onGenerateInitialRoutes:
-                  (initialRoute) => [
-                    VortexRouter.initialRouteHandler(
-                      RouteSettings(name: initialRoute),
-                    ),
-                  ],
-              onGenerateRoute: VortexRouter.onGenerateRoute,
-            );
-          },
-        ),
+      child: ReactiveBuilder(
+        dependencies: [themeState.theme, themeState.isDarkMode],
+        builder: (context) {
+          return FlutterWind(
+            showDevTools: true,
+            title: 'FlutterWind Demo',
+            themeMode:
+                themeState.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+            initialRoute: '/',
+            onGenerateInitialRoutes:
+                (initialRoute) => [
+                  VortexRouter.initialRouteHandler(
+                    RouteSettings(name: initialRoute),
+                  ),
+                ],
+            onGenerateRoute: VortexRouter.onGenerateRoute,
+          );
+        },
       ),
     );
   }

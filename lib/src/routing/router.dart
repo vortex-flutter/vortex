@@ -803,7 +803,7 @@ class VortexRouter {
   }
 
   /// Route generator for dynamic routes
-  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name ?? '/';
     // First check if it's a registered route
     if (_routes.containsKey(routeName)) {

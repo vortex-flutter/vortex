@@ -172,10 +172,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutterwind_core
-      sha256: "52002162a27d5df7ad02be0fc110ee417e6048a801517a202b9a095a8afd1fb1"
+      sha256: "607455a353a94c24b9a945cd957fb2bbb863d9fcca99ee408ff28e4fcb0ef743"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.7"
   glob:
     dependency: transitive
     description:
