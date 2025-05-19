@@ -17,8 +17,6 @@
 * Added useFetch composable.
 * Improved error handling and logging.
 * Improved Reactive Store.
-
-## 0.0.4
 * Added CLI tools for generating pages, components, and more
 * Added middleware support for handling navigation and requests
 * Added plugin architecture for extending functionality
