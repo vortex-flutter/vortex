@@ -1,3 +1,4 @@
+import 'package:example/generated/components.vortex.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwind_core/flutterwind.dart';
 import 'package:vortex/vortex.dart';
@@ -9,15 +10,13 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productCard = context.component('ProductCard');
+    final productCard = VortexComponent.instance.productCard;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products'),
-      ),
+      appBar: AppBar(title: const Text('Products')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          productCard(props:{
+          productCard({
             'title': 'Premium Headphones',
             'price': 199.99,
             'imageUrl': 'https://example.com/images/headphones.jpg',
@@ -28,13 +27,13 @@ class ProductPage extends StatelessWidget {
             },
           }),
           const SizedBox(height: 16),
-          productCard(props: {
+          productCard({
             'title': 'Wireless Keyboard',
             'price': 89.99,
             'imageUrl': 'https://example.com/images/keyboard.jpg',
           }),
           const SizedBox(height: 16),
-          productCard(props: {
+          productCard({
             'title': 'Smart Watch',
             'price': 249.99,
             'imageUrl': 'https://example.com/images/watch.jpg',

@@ -62,3 +62,4 @@ flutter:
 
   assets:
     - tailwind.config.yaml
+    - vortex.config.yaml

@@ -17,3 +17,16 @@
 * Added useFetch composable.
 * Improved error handling and logging.
 * Improved Reactive Store.
+
+## 0.0.4
+* Added CLI tools for generating pages, components, and more
+* Added middleware support for handling navigation and requests
+* Added plugin architecture for extending functionality
+* Added reactive state management solution
+* Added file-based routing system
+* Added component system with simple API
+* Improved documentation and examples
+* Added support for shared preferences
+* Added HTTP client with Dio integration
+* Added logger plugin for better debugging
+

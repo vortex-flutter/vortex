@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:vortex/src/plugins/plugin_registry.dart';
 
 /// Base class for FlutterWind plugins
-abstract class BasePlugin implements VortexPlugin {
+abstract class BasePlugin implements Plugin {
   @override
   Future<void> initialize() async {
     // Default implementation does nothing

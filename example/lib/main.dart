@@ -1,21 +1,22 @@
 import 'dart:io';
-
-import 'package:example/composables/useTheme.dart';
 import 'package:example/middleware/auth_middleware.dart';
+import 'package:example/plugins/logger_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterwind_core/flutterwind.dart';
 import 'package:vortex/vortex.dart';
 import 'package:example/generated/routes.dart';
 
 void main() async {
+  Vortex.projectDirectory = Directory(
+    '/Volumes/EVILRATT/Innovative Projects/vortex/example',
+  );
   await VortexRouter.discoverRoutes(
     projectDirectory: Directory(
       '/Volumes/EVILRATT/Innovative Projects/vortex/example',
     ),
   );
-
+  registerLoggerPlugin();
   initializeRoutes();
-  registerThemeComposable();
   MiddlewareRegistry.register('auth', AuthMiddleware());
   runApp(const MyApp());
 }
@@ -31,12 +32,28 @@ class _MyAppState extends State<MyApp> with CompositionMixin {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // final isDarkMode = useRef<bool>('isDarkMode', false);
-    final useThemeComposable = Vortex.getComposable('useTheme');
-    final themeState = useThemeComposable(context);
-    final isDarkMode = themeState.isDarkMode;
+    final themeState = useTheme(
+      lightTheme: ThemeData.light().copyWith(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+        brightness: Brightness.light,
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+        brightness: Brightness.dark,
+      ),
+      initialDarkMode: false,
+    );
+
     // Set up watchers
-    watch(isDarkMode, () => isDarkMode.value, (newValue, oldValue) {
+    watch(themeState.isDarkMode, () => themeState.isDarkMode.value, (
+      newValue,
+      oldValue,
+    ) {
       Log.i(
         'Theme changed from ${oldValue! ? "dark" : "light"} to ${newValue ? "dark" : "light"}',
       );
@@ -50,24 +67,15 @@ class _MyAppState extends State<MyApp> with CompositionMixin {
     return Vortex(
       child: FlutterWind(
         child: ReactiveBuilder(
-          dependencies: [isDarkMode],
+          dependencies: [themeState.theme, themeState.isDarkMode],
           builder: (context) {
             return MaterialApp(
               title: 'Vortex Demo',
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                useMaterial3: true,
-                brightness: Brightness.light,
-              ),
-              darkTheme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepPurple,
-                  brightness: Brightness.dark,
-                ),
-                useMaterial3: true,
-                brightness: Brightness.dark,
-              ),
-              themeMode:  isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+              theme: themeState.theme.value,
+              themeMode:
+                  themeState.isDarkMode.value
+                      ? ThemeMode.dark
+                      : ThemeMode.light,
               initialRoute: '/',
               onGenerateInitialRoutes:
                   (initialRoute) => [
@@ -77,7 +85,7 @@ class _MyAppState extends State<MyApp> with CompositionMixin {
                   ],
               onGenerateRoute: VortexRouter.onGenerateRoute,
             );
-          }
+          },
         ),
       ),
     );

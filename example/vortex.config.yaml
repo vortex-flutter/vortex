@@ -1,0 +1,7 @@
+compiler:
+  outputDir: "dist"
+  useFlutterWind: true 
+store:
+  enabled: true
+  persistent: true
+  log: true

@@ -1,3 +1,4 @@
+import 'package:example/generated/plugins.vortex.g.dart';
 import 'package:flutter/material.dart';
 import 'package:vortex/vortex.dart';
 import 'package:flutterwind_core/flutterwind.dart';
@@ -5,7 +6,7 @@ import 'package:flutterwind_core/flutterwind.dart';
 /// LoginPage page
 @VortexPage('/')
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,25 +15,53 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> with CompositionMixin {
   @override
   Widget build(BuildContext context) {
-    final useThemeComposable = Vortex.getComposable('useTheme');
-    final themeState = useThemeComposable(context);
-    print("themeState :: ${themeState.toggleTheme()}");
+    final logger = VortexPlugins.instance.logger;
+    logger.info('User clicked the button hello');
 
-    final isDarkMode = themeState.isDarkMode;
+    // Get the theme state
+    final themeState = useTheme();
 
     return ReactiveBuilder(
-      dependencies: [isDarkMode], // Add the isDarkMode state to the dependencies list
+      dependencies: [themeState.isDarkMode],
       builder: (context) {
         return Scaffold(
           body: Center(
-            child: Text("Toggle Theme ${isDarkMode.value}")
-                .className('text-black')
-                .withGestures(
-                  onTap: () {
-                    themeState.toggleTheme();
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Current Theme: ${themeState.isDarkMode.value ? 'Dark' : 'Light'}",
+                ).className('text-black dark:text-white'),
+
+                SizedBox(height: 20),
+
+                ElevatedButton(
+                  onPressed: () {
+                    themeState.toggleDarkMode();
                   },
+                  child: Text('Toggle Theme'),
                 ),
-          ).className('bg-white dark:bg-red-400'),
+
+                SizedBox(height: 10),
+
+                ElevatedButton(
+                  onPressed: () {
+                    themeState.setDarkMode(true);
+                  },
+                  child: Text('Set Dark Mode'),
+                ),
+
+                SizedBox(height: 10),
+
+                ElevatedButton(
+                  onPressed: () {
+                    themeState.setDarkMode(false);
+                  },
+                  child: Text('Set Light Mode'),
+                ),
+              ],
+            ),
+          ).className('bg-white dark:bg-gray-900'),
         );
       },
     );

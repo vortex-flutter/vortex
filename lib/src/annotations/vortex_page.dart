@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// Annotation for FlutterWind pages
+/// Annotation for Vortex pages
 @immutable
 class VortexPage {
   final String route;

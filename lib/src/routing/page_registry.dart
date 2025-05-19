@@ -235,11 +235,3 @@ class VortexPageRegistry {
     _filePathToRoute.clear();
   }
 }
-
-/// Annotation for Vortex pages
-class VortexPage {
-  final String routePath;
-  final List<String> middleware;
-
-  const VortexPage(this.routePath, {this.middleware = const []});
-}

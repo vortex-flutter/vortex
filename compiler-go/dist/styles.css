@@ -1,0 +1,303 @@
+/* Flutter to CSS Property Mappings */
+
+/* Layout Properties */
+.flex { display: flex; }
+.row { flex-direction: row; }
+.column { flex-direction: column; }
+.wrap { flex-wrap: wrap; }
+.nowrap { flex-wrap: nowrap; }
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+.flex-3 { flex: 3; }
+.flex-4 { flex: 4; }
+.flex-5 { flex: 5; }
+
+/* Alignment */
+.main-start { justify-content: flex-start; }
+.main-center { justify-content: center; }
+.main-end { justify-content: flex-end; }
+.main-space-between { justify-content: space-between; }
+.main-space-around { justify-content: space-around; }
+.main-space-evenly { justify-content: space-evenly; }
+
+.cross-start { align-items: flex-start; }
+.cross-center { align-items: center; }
+.cross-end { align-items: flex-end; }
+.cross-stretch { align-items: stretch; }
+.cross-baseline { align-items: baseline; }
+
+/* Spacing */
+.m-0 { margin: 0; }
+.m-1 { margin: 4px; }
+.m-2 { margin: 8px; }
+.m-3 { margin: 12px; }
+.m-4 { margin: 16px; }
+.m-5 { margin: 20px; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: 4px; }
+.p-2 { padding: 8px; }
+.p-3 { padding: 12px; }
+.p-4 { padding: 16px; }
+.p-5 { padding: 20px; }
+
+/* Colors */
+.text-primary { color: #2196F3; }
+.text-secondary { color: #757575; }
+.text-success { color: #4CAF50; }
+.text-danger { color: #F44336; }
+.text-warning { color: #FFC107; }
+.text-info { color: #00BCD4; }
+.text-light { color: #F5F5F5; }
+.text-dark { color: #212121; }
+
+.bg-primary { background-color: #2196F3; }
+.bg-secondary { background-color: #757575; }
+.bg-success { background-color: #4CAF50; }
+.bg-danger { background-color: #F44336; }
+.bg-warning { background-color: #FFC107; }
+.bg-info { background-color: #00BCD4; }
+.bg-light { background-color: #F5F5F5; }
+.bg-dark { background-color: #212121; }
+
+/* Typography */
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-base { font-size: 16px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-2xl { font-size: 24px; }
+.text-3xl { font-size: 30px; }
+.text-4xl { font-size: 36px; }
+
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* Borders */
+.rounded-none { border-radius: 0; }
+.rounded-sm { border-radius: 2px; }
+.rounded { border-radius: 4px; }
+.rounded-md { border-radius: 6px; }
+.rounded-lg { border-radius: 8px; }
+.rounded-xl { border-radius: 12px; }
+.rounded-full { border-radius: 9999px; }
+
+.border { border: 1px solid #E0E0E0; }
+.border-0 { border: 0; }
+.border-2 { border-width: 2px; }
+.border-4 { border-width: 4px; }
+.border-8 { border-width: 8px; }
+
+/* Shadows */
+.shadow-none { box-shadow: none; }
+.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.shadow-lg { box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+.shadow-xl { box-shadow: 0 20px 25px rgba(0,0,0,0.1); }
+
+/* Opacity */
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* Position */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Display */
+.block { display: block; }
+.inline-block { display: inline-block; }
+.inline { display: inline; }
+.hidden { display: none; }
+
+/* Overflow */
+.overflow-auto { overflow: auto; }
+.overflow-hidden { overflow: hidden; }
+.overflow-scroll { overflow: scroll; }
+.overflow-visible { overflow: visible; }
+
+/* Z-index */
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+
+/* Width/Height */
+.w-full { width: 100%; }
+.w-screen { width: 100vw; }
+.h-full { height: 100%; }
+.h-screen { height: 100vh; }
+
+/* Cursor */
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+.cursor-wait { cursor: wait; }
+
+/* Transitions */
+.transition { transition: all 0.3s ease; }
+.transition-fast { transition: all 0.15s ease; }
+.transition-slow { transition: all 0.5s ease; }
+
+/* Transform */
+.scale-0 { transform: scale(0); }
+.scale-50 { transform: scale(0.5); }
+.scale-75 { transform: scale(0.75); }
+.scale-100 { transform: scale(1); }
+.scale-125 { transform: scale(1.25); }
+.scale-150 { transform: scale(1.5); }
+
+/* Flutter-specific Components */
+.material-app {
+  font-family: 'Roboto', sans-serif;
+  color: #212121;
+  background-color: #FFFFFF;
+}
+
+.scaffold {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-bar {
+  background-color: #2196F3;
+  color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.bottom-navigation-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+}
+
+.floating-action-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: #2196F3;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.card {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+  margin: 8px;
+}
+
+.list-tile {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.button.primary {
+  background-color: #2196F3;
+  color: white;
+}
+
+.button.secondary {
+  background-color: #757575;
+  color: white;
+}
+
+.text-field {
+  padding: 8px;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.text-field:focus {
+  border-color: #2196F3;
+  outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .hide-sm { display: none; }
+}
+
+@media (max-width: 768px) {
+  .hide-md { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .hide-lg { display: none; }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+} 
